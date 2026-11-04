@@ -235,6 +235,17 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Si es una ruta relativa, mantenerla relativa para no forzar dominios obsoletos de preview
+      if (url.startsWith("/")) return url;
+      try {
+        const parsed = new URL(url);
+        if (parsed.origin === baseUrl || parsed.hostname.endsWith(".vercel.app")) {
+          return url;
+        }
+      } catch {}
+      return "/admin/login";
+    },
   },
 };
 

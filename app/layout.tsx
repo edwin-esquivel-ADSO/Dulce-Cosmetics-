@@ -76,12 +76,51 @@ export default async function RootLayout({
   const settingsRes = await getStoreSettings();
   const settings = settingsRes.data;
 
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BeautySalon",
+    name: settings?.brandName || "Dulce Cosmetics",
+    image: "https://dulcecosmetics.com/logo.png",
+    description:
+      "Tienda de cosméticos, maquillaje y cuidado personal en Neiva, Huila. Domicilios en toda la ciudad y envíos nacionales.",
+    telephone: "+573177780413",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Carrera 7 #38-16",
+      addressLocality: "Neiva",
+      addressRegion: "Huila",
+      addressCountry: "CO",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 2.9468,
+      longitude: -75.2929,
+    },
+    founder: {
+      "@type": "Person",
+      name: "Natalia Narváez",
+    },
+    priceRange: "$$",
+    currenciesAccepted: "COP",
+    paymentAccepted: "Cash, Nequi, Daviplata",
+    areaServed: {
+      "@type": "City",
+      name: "Neiva",
+    },
+  };
+
   return (
     <html
       lang="es"
       className={`${playfair.variable} ${dmSans.variable} scroll-smooth`}
       data-scroll-behavior="smooth"
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        />
+      </head>
       <body className="font-sans bg-[#f9f9f9] text-[#1a1c1c] min-h-screen flex flex-col selection:bg-[#f4c2c2] selection:text-[#734e4e]">
         <Providers>
           {/* Navbar Global */}

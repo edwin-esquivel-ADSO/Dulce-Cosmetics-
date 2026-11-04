@@ -15,6 +15,7 @@ import {
   Smartphone,
   CreditCard,
   ShieldCheck,
+  ExternalLink,
 } from "lucide-react";
 
 export default function Footer() {
@@ -78,6 +79,15 @@ export default function Footer() {
               <div>
                 <p className="font-medium text-white">Carrera 7 #38-16</p>
                 <p className="text-xs text-[#dadada]/80">Barrio Las Granjas • Neiva, Huila</p>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Carrera+7+%2338-16+Barrio+Las+Granjas+Neiva+Huila"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] text-[#f1ca50] hover:underline mt-1 font-medium"
+                >
+                  <span>Ver en Google Maps</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
             </div>
             <div className="flex items-start gap-2 text-sm text-[#dadada]">

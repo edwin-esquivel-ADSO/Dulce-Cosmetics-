@@ -30,6 +30,16 @@ export default function AdminLayout({
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  // Manejador seguro de cierre de sesión sin redirección a hosts obsoletos (previene 404 DEPLOYMENT_NOT_FOUND)
+  const handleLogout = async () => {
+    try {
+      await signOut({ redirect: false });
+    } catch (err) {
+      console.warn("Aviso en cierre de sesión:", err);
+    }
+    window.location.href = "/admin/login";
+  };
+
   // Si estamos en la pantalla de login, renderizamos directamente sin sidebar
   if (pathname === "/admin/login") {
     return <>{children}</>;
@@ -103,7 +113,7 @@ export default function AdminLayout({
           </Link>
           <button
             type="button"
-            onClick={() => signOut({ callbackUrl: "/admin/login" })}
+            onClick={handleLogout}
             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             title="Cerrar Sesión"
           >
@@ -192,7 +202,7 @@ export default function AdminLayout({
 
           <button
             type="button"
-            onClick={() => signOut({ callbackUrl: "/admin/login" })}
+            onClick={handleLogout}
             className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors"
           >
             <LogOut className="w-4 h-4" />
