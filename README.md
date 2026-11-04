@@ -72,7 +72,7 @@ La plataforma web de Dulce Cosmetics fue concebida para brindarte una compra ág
 
 ---
 
-## 👥 Créditos del Proyecto
+## Proyecto
 
 - **Propietaria & Representante Comercial:**  
   **Natalia Narváez** — Creadora de Dulce Cosmetics (Neiva, Huila).
@@ -80,8 +80,6 @@ La plataforma web de Dulce Cosmetics fue concebida para brindarte una compra ág
 - **Desarrollador de Software:**  
   **Edwin Alejandro Esquivel Bahamón**  
   GitHub: [@edwin-esquivel-ADSO](https://github.com/edwin-esquivel-ADSO)  
-  Programa: Tecnólogo en Análisis y Desarrollo de Software (ADSO) — **SENA Ficha 3413974**  
-  Instructor Principal: **Jesús Ariel**
 
 ---
 
