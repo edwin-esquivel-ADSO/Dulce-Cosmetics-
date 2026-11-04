@@ -1,17 +1,68 @@
 "use server";
 
-import { db, products, productVariants, categories } from "@/database/db";
+import { db, products, productVariants, categories, hasDatabaseConfigured } from "@/database/db";
 import { eq, desc, and, ilike, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { ActionResponse } from "@/backend/types";
 import { productStandardSchema, type ProductStandardInput } from "@/backend/validations";
 import { requireAdminSession } from "@/backend/services/auth";
+import localCatalog from "@/data/catalogo-dulce-cosmetics.json";
+
+function getFallbackProducts(options?: {
+  categorySlug?: string;
+  search?: string;
+  featured?: boolean;
+}) {
+  let list = (localCatalog as Array<any>).map((p) => ({
+    id: p.id,
+    nombre: p.nombre,
+    slug: p.slug,
+    descripcion: p.descripcion,
+    precio: p.precio,
+    imagenUrl: p.imagenUrl,
+    stock: p.stock ?? 20,
+    destacado: !!p.destacado,
+    estado: true,
+    createdAt: new Date(),
+    category: {
+      id: p.id,
+      nombre: p.categoria,
+      slug: p.categoriaSlug,
+    },
+    variants: (p.variantes || []).map((v: string, i: number) => ({
+      id: p.id * 100 + i + 1,
+      nombre: v,
+      stockEstimado: Math.floor((p.stock ?? 20) / ((p.variantes || []).length || 1)),
+    })),
+  }));
+
+  if (options?.featured !== undefined) {
+    list = list.filter((p) => p.destacado === options.featured);
+  }
+
+  if (options?.search && options.search.trim()) {
+    const q = options.search.trim().toLowerCase();
+    list = list.filter(
+      (p) => p.nombre.toLowerCase().includes(q) || p.descripcion.toLowerCase().includes(q)
+    );
+  }
+
+  if (options?.categorySlug && options.categorySlug !== "todas") {
+    list = list.filter((p) => p.category.slug === options.categorySlug);
+  }
+
+  return list;
+}
 
 export async function getProducts(options?: {
   categorySlug?: string;
   search?: string;
   featured?: boolean;
 }) {
+  if (!hasDatabaseConfigured()) {
+    return getFallbackProducts(options);
+  }
+
   try {
     const conditions = [eq(products.estado, true)];
 
@@ -53,7 +104,7 @@ export async function getProducts(options?: {
     const result = await query;
 
     if (result.length === 0) {
-      return [];
+      return getFallbackProducts(options);
     }
 
     // Cargar únicamente las variantes de los productos encontrados
@@ -77,12 +128,17 @@ export async function getProducts(options?: {
 
     return productsWithVariants;
   } catch (error) {
-    console.error("Error al obtener productos:", error);
-    return [];
+    console.warn("[getProducts] Retornando catálogo de respaldo:", error);
+    return getFallbackProducts(options);
   }
 }
 
 export async function getProductBySlug(slug: string) {
+  if (!hasDatabaseConfigured()) {
+    const fallback = getFallbackProducts().find((p) => p.slug === slug);
+    return fallback || null;
+  }
+
   try {
     const result = await db
       .select({
@@ -107,7 +163,10 @@ export async function getProductBySlug(slug: string) {
       .where(eq(products.slug, slug))
       .limit(1);
 
-    if (result.length === 0) return null;
+    if (result.length === 0) {
+      const fallback = getFallbackProducts().find((p) => p.slug === slug);
+      return fallback || null;
+    }
 
     const product = result[0];
     const variants = await db
@@ -120,8 +179,9 @@ export async function getProductBySlug(slug: string) {
       variants,
     };
   } catch (error) {
-    console.error("Error al buscar producto por slug:", error);
-    return null;
+    console.warn("[getProductBySlug] Retornando producto de respaldo:", error);
+    const fallback = getFallbackProducts().find((p) => p.slug === slug);
+    return fallback || null;
   }
 }
 

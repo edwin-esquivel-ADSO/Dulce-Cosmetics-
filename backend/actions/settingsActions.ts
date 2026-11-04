@@ -1,6 +1,6 @@
 "use server";
 
-import { db, storeSettings } from "@/database/db";
+import { db, storeSettings, hasDatabaseConfigured } from "@/database/db";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -47,6 +47,14 @@ const CACHE_LIFETIME = 5 * 60 * 1000; // 5 minutos
  * Recupera la configuración actual de branding de la tienda
  */
 export async function getStoreSettings(): Promise<ActionResponse<typeof DEFAULT_SETTINGS>> {
+  if (!hasDatabaseConfigured()) {
+    return {
+      success: true,
+      message: "Configuración por defecto (Entorno sin base de datos activa).",
+      data: DEFAULT_SETTINGS,
+    };
+  }
+
   if (cachedSettingsData && Date.now() - lastCacheTime < CACHE_LIFETIME) {
     return {
       success: true,

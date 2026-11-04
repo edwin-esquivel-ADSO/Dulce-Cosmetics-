@@ -33,6 +33,11 @@ function getConnectionString(): string {
   return "";
 }
 
+export function hasDatabaseConfigured(): boolean {
+  const conn = getConnectionString();
+  return !!conn && conn.length > 10;
+}
+
 function initDatabase() {
   const connectionString = getConnectionString();
 
@@ -44,7 +49,7 @@ function initDatabase() {
   const pool =
     globalThis.__neonPool ??
     new Pool({
-      connectionString: connectionString || "postgresql://placeholder:placeholder@localhost:5432/placeholder",
+      connectionString: connectionString || "postgresql://placeholder:placeholder@ep-placeholder.us-east-2.aws.neon.tech/neondb?sslmode=require",
       max: 10,
     });
 
