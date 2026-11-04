@@ -1,0 +1,2 @@
+@echo off
+start "" conhost.exe powershell.exe -NoExit -Command "Set-Location '%~dp0'; Write-Host '========================================================' -ForegroundColor Cyan; Write-Host ' 🚀 CLAUDE CODE ACTIVO - DULCE COSMETICS' -ForegroundColor Green; Write-Host ' ⚡ Enrutador: http://127.0.0.1:20129' -ForegroundColor Cyan; Write-Host '========================================================' -ForegroundColor Cyan; claude"
