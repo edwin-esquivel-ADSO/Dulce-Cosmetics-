@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+import Providers from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getStoreSettings } from "@/backend/actions/settingsActions";
@@ -82,20 +83,22 @@ export default async function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="font-sans bg-[#f9f9f9] text-[#1a1c1c] min-h-screen flex flex-col selection:bg-[#f4c2c2] selection:text-[#734e4e]">
-        {/* Navbar Global */}
-        <Navbar
-          brandName={settings?.brandName || "Dulce Cosmetics"}
-          announcementText={settings?.announcementText || undefined}
-        />
+        <Providers>
+          {/* Navbar Global */}
+          <Navbar
+            brandName={settings?.brandName || "Dulce Cosmetics"}
+            announcementText={settings?.announcementText || undefined}
+          />
 
-        {/* Drawer del Carrito */}
-        <CartDrawer />
+          {/* Drawer del Carrito */}
+          <CartDrawer />
 
-        {/* Contenido Principal */}
-        <main className="flex-1">{children}</main>
+          {/* Contenido Principal */}
+          <main className="flex-1">{children}</main>
 
-        {/* Footer Global (se oculta automáticamente en rutas /admin) */}
-        <Footer />
+          {/* Footer Global (se oculta automáticamente en rutas /admin) */}
+          <Footer />
+        </Providers>
 
         {/* Vercel Analytics y Speed Insights (Punto 11) */}
         <Analytics />

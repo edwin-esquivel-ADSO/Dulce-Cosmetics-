@@ -3,7 +3,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { MessageCircle, MapPin, Heart, Sparkles, Phone, Clock, Truck } from "lucide-react";
+import {
+  MessageCircle,
+  MapPin,
+  Heart,
+  Sparkles,
+  Phone,
+  Clock,
+  Truck,
+  Banknote,
+  Smartphone,
+  CreditCard,
+  ShieldCheck,
+} from "lucide-react";
 
 export default function Footer() {
   const pathname = usePathname();
@@ -117,30 +129,34 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Columna 4: Métodos de Pago Locales */}
+          {/* Columna 4: Métodos de Pago Locales y Nacionales */}
           <div className="space-y-3">
             <h4 className="font-serif text-base font-semibold text-white tracking-wide border-b border-[#827473]/40 pb-2">
-              Métodos de Pago
+              Condiciones de Pago
             </h4>
             <p className="text-xs text-[#dadada] leading-relaxed">
-              Paga como te sea más cómodo al momento de recibir o por transferencia segura:
+              En <strong className="text-white">Neiva</strong> cuentas con contraentrega. Para <strong className="text-white">otros destinos</strong> se despacha con pago 100% anticipado:
             </p>
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center">
-                <span className="font-bold text-white block">💵 Efectivo</span>
-                <span className="text-[10px] text-[#dadada]">Contraentrega</span>
+              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center flex flex-col items-center justify-center">
+                <Banknote className="w-4 h-4 text-[#ecbaba] mb-1" />
+                <span className="font-bold text-white block">Efectivo</span>
+                <span className="text-[10px] text-[#dadada]">Contraentrega Neiva</span>
               </div>
-              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center">
-                <span className="font-bold text-[#b17ef8] block">🟣 Nequi</span>
+              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center flex flex-col items-center justify-center">
+                <Smartphone className="w-4 h-4 text-[#b17ef8] mb-1" />
+                <span className="font-bold text-[#b17ef8] block">Nequi</span>
                 <span className="text-[10px] text-[#dadada]">Transferencia</span>
               </div>
-              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center">
-                <span className="font-bold text-[#e63946] block">🔴 Daviplata</span>
+              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center flex flex-col items-center justify-center">
+                <CreditCard className="w-4 h-4 text-[#e63946] mb-1" />
+                <span className="font-bold text-[#e63946] block">Daviplata</span>
                 <span className="text-[10px] text-[#dadada]">Transferencia</span>
               </div>
-              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center">
-                <span className="font-bold text-[#f1ca50] block">✨ Asesoría</span>
-                <span className="text-[10px] text-[#dadada]">Personalizada</span>
+              <div className="bg-[#2f3131] p-2.5 rounded border border-[#827473]/40 text-center flex flex-col items-center justify-center">
+                <Truck className="w-4 h-4 text-[#f1ca50] mb-1" />
+                <span className="font-bold text-[#f1ca50] block">Nacionales</span>
+                <span className="text-[10px] text-[#dadada]">Pago Anticipado</span>
               </div>
             </div>
           </div>
@@ -148,7 +164,7 @@ export default function Footer() {
 
         {/* Barra Inferior de Copyright */}
         <div className="border-t border-[#827473]/20 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#dadada]/70 gap-4">
-          <p>© {new Date().getFullYear()} Dulce Cosmetics • Propietaria: Natalia Narváez • Desarrollado por Edwin Esquivel (ADSO SENA).</p>
+          <p>© {new Date().getFullYear()} Dulce Cosmetics • Propietaria: Natalia Narváez • Desarrollado por Edwin Esquivel.</p>
           <div className="flex items-center gap-1 text-xs">
             <span>Hecho con</span>
             <Heart className="w-3.5 h-3.5 text-[#ecbaba] fill-[#ecbaba]" />

@@ -4,7 +4,7 @@
 <div align="center">
   <img src="public/logo.png" alt="Dulce Cosmetics" width="120" style="border-radius: 50%; box-shadow: 0 4px 14px rgba(0,0,0,0.15);" />
   <h3>Realza tu resplandor natural con productos de belleza y cuidado personal en Neiva, Huila</h3>
-  <p><strong>Propietaria & Creadora:</strong> Natalia Narváez &nbsp;|&nbsp; <strong>Desarrollo Web:</strong> Edwin Alejandro Esquivel Bahamón</p>
+  <p><strong>Propietaria & Creadora:</strong> Natalia Narváez &nbsp;|&nbsp; <strong>Desarrollador:</strong> Edwin Esquivel</p>
 </div>
 
 ---
@@ -42,10 +42,10 @@ Puedes visitar el punto de entrega de Natalia o solicitar tu pedido con entrega 
 - 🛵 **Cobertura de Domicilios en Neiva:**
   - **Barrio Las Granjas:** ¡Domicilio **GRATIS** por compras desde **$15.000 COP**!
   - **Zonas de Cobertura:** Cándido, Centro, Ipanema, Altico, Quirinal, Oriente, Sur y zonas aledañas de Neiva.
-  - Envíos a municipios vecinos del Huila bajo previa coordinación.
-- 💳 **Medios de Pago:**
-  - Efectivo contraentrega en Neiva (pagas al recibir tu pedido).
-  - Transferencia directa e inmediata por **Nequi** o **Daviplata**.
+  - Envíos a municipios vecinos del Huila y nivel nacional bajo previa coordinación.
+- 💳 **Políticas y Medios de Pago:**
+  - **En Neiva:** Pago contraentrega disponible en efectivo o transferencia inmediata por **Nequi** o **Daviplata** al recibir tu pedido.
+  - **Envíos Fuera de Neiva (Nacional / Regional):** Requiere **pago completo (100% anticipado)** de los productos antes de realizar el despacho por transportadora (Interrapidísimo / Envía). El costo del flete se cancela contraentrega a la transportadora.
 
 ---
 
@@ -78,7 +78,7 @@ La plataforma web de Dulce Cosmetics fue concebida para brindarte una compra ág
   **Natalia Narváez** — Creadora de Dulce Cosmetics (Neiva, Huila).
 
 - **Desarrollador de Software:**  
-  **Edwin Alejandro Esquivel Bahamón**  
+  **Edwin Esquivel**  
   GitHub: [@edwin-esquivel-ADSO](https://github.com/edwin-esquivel-ADSO)  
 
 ---

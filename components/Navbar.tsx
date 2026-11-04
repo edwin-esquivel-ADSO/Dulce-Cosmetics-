@@ -4,8 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useCart } from "@/hooks/useCart";
-import { ShoppingBag, Search, Menu, X, Sparkles, ShieldCheck } from "lucide-react";
+import { ShoppingBag, Search, Menu, X, Sparkles, ShieldCheck, User, LogIn } from "lucide-react";
 
 interface NavbarProps {
   brandName?: string;
@@ -22,6 +23,8 @@ export default function Navbar({
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
+  const isAdmin = mounted && (session?.user?.role === "ADMIN" || session?.user?.role === "SUB_ADMIN");
 
   const { toggleCart, getItemCount } = useCart();
   const itemCount = mounted ? getItemCount() : 0;
@@ -147,15 +150,26 @@ export default function Navbar({
               <Search className="w-5 h-5" />
             </button>
 
-            {/* Enlace Admin Discreto */}
-            <Link
-              href="/admin"
-              className="hidden sm:flex items-center text-[11px] uppercase tracking-wider text-[#827473] hover:text-[#7b5455] px-2.5 py-1 rounded border border-[#d4c2c2]/50 hover:border-[#7b5455] transition-all"
-              title="Panel Administrativo"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 mr-1 text-[#7b5455]" />
-              Admin
-            </Link>
+            {/* Botón de Acceso / Iniciar Sesión o Panel Admin si está autenticado */}
+            {isAdmin ? (
+              <Link
+                href="/admin"
+                className="hidden sm:inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-bold text-white bg-[#7b5455] hover:bg-[#623c3d] px-3 py-1.5 rounded-full shadow-sm hover:shadow transition-all duration-300 transform hover:scale-105 active:scale-95"
+                title="Panel Administrativo"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-[#f1ca50]" />
+                <span>Panel Admin</span>
+              </Link>
+            ) : (
+              <Link
+                href="/admin/login"
+                className="group hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#7b5455] bg-[#f4c2c2]/25 hover:bg-[#7b5455] hover:text-white px-3.5 py-1.5 rounded-full border border-[#d4c2c2]/50 hover:border-[#7b5455] shadow-xs hover:shadow-md transition-all duration-300 transform hover:scale-105 active:scale-95"
+                title="Iniciar Sesión en Dulce Cosmetics"
+              >
+                <User className="w-3.5 h-3.5 text-[#7b5455] group-hover:text-white transition-colors duration-300" />
+                <span className="tracking-wide">Iniciar Sesión</span>
+              </Link>
+            )}
 
             {/* Botón Carrito con Badge Interactivo */}
             <button
@@ -203,13 +217,23 @@ export default function Navbar({
               </Link>
             ))}
             <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
-              <Link
-                href="/admin"
-                className="flex items-center text-xs text-[#7b5455] font-semibold py-2 px-3 hover:bg-[#f4c2c2]/20 rounded-md"
-              >
-                <ShieldCheck className="w-4 h-4 mr-2" />
-                Panel Administrativo
-              </Link>
+              {isAdmin ? (
+                <Link
+                  href="/admin"
+                  className="flex items-center text-xs text-[#7b5455] font-bold py-2 px-3 bg-[#f4c2c2]/20 rounded-md"
+                >
+                  <ShieldCheck className="w-4 h-4 mr-2 text-[#7b5455]" />
+                  <span>Panel Administrativo</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/admin/login"
+                  className="flex items-center text-xs text-[#504444] font-semibold py-2 px-3 hover:bg-[#f4c2c2]/20 rounded-md transition-colors"
+                >
+                  <User className="w-4 h-4 mr-2 text-[#7b5455]" />
+                  <span>Iniciar Sesión</span>
+                </Link>
+              )}
               <span className="text-xs text-gray-500">Neiva, Huila</span>
             </div>
           </div>

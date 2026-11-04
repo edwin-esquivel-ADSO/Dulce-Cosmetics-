@@ -49,7 +49,8 @@ export const createOrderSchema = z.object({
     .max(20, "Número de teléfono demasiado largo")
     .regex(/^[0-9+\s-]+$/, "Solo números, espacios y signos '+' o '-' permitidos en teléfono"),
   direccion: z.string().trim().min(4, "Dirección completa requerida (calle, carrera, número, apto)").max(200, "Dirección excede 200 caracteres"),
-  barrio: z.string().trim().min(2, "Por favor indica tu barrio en Neiva").max(100, "Barrio excede 100 caracteres"),
+  ciudad: z.string().trim().max(100).optional().default("Neiva"),
+  barrio: z.string().trim().min(2, "Por favor indica tu barrio o sector").max(100, "Barrio excede 100 caracteres"),
   metodoPago: z.enum(["efectivo", "nequi", "daviplata"], {
     errorMap: () => ({ message: "Selecciona un método de pago válido (efectivo, nequi o daviplata)" }),
   }),

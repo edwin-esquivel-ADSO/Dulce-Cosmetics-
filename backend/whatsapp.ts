@@ -9,6 +9,7 @@ export interface WhatsAppOrderData {
   orderId?: number | string;
   nombreCliente: string;
   telefono: string;
+  ciudad?: string;
   direccion: string;
   barrio: string;
   metodoPago: string;
@@ -32,17 +33,21 @@ export function generateWhatsAppOrderUrl(order: WhatsAppOrderData): string {
 
   const subtotal = order.items.reduce((acc, item) => acc + item.precioUnitario * item.cantidad, 0);
 
+  const isNeiva = !order.ciudad || order.ciudad.trim().toLowerCase() === "neiva";
+
   const paymentMethodLabels: Record<string, string> = {
-    efectivo: "💵 Efectivo contraentrega",
-    nequi: "🟣 Transferencia Nequi",
-    daviplata: "🔴 Transferencia Daviplata",
+    efectivo: isNeiva ? "Efectivo contraentrega en Neiva" : "Efectivo",
+    nequi: "Transferencia Nequi",
+    daviplata: "Transferencia Daviplata",
   };
 
   const paymentLabel = paymentMethodLabels[order.metodoPago.toLowerCase()] || order.metodoPago;
 
   const domicilioText =
     order.costoDomicilio === 0
-      ? "GRATIS (Zona especial / Las Granjas)"
+      ? isNeiva
+        ? "GRATIS (Zona especial / Las Granjas)"
+        : "Flete a convenir / Contraentrega transportadora"
       : formatCurrency(order.costoDomicilio);
 
   let message = `*🌸 ¡NUEVO PEDIDO - DULCE COSMETICS! 🌸*\n`;
@@ -51,11 +56,14 @@ export function generateWhatsAppOrderUrl(order: WhatsAppOrderData): string {
   }
   message += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
 
-  message += `*👤 DATOS DE ENTREGA (NEIVA):*\n`;
+  message += `*👤 DATOS DE ENTREGA:*\n`;
   message += `• *Cliente:* ${order.nombreCliente}\n`;
   message += `• *Teléfono:* ${order.telefono}\n`;
+  if (order.ciudad) {
+    message += `• *Ciudad:* ${order.ciudad} ${isNeiva ? "(Entrega Local)" : "(Envío Nacional)"}\n`;
+  }
   message += `• *Dirección:* ${order.direccion}\n`;
-  message += `• *Barrio:* ${order.barrio}\n\n`;
+  message += `• *Barrio/Sector:* ${order.barrio}\n\n`;
 
   message += `*💄 PRODUCTOS SOLICITADOS:*\n`;
   order.items.forEach((item, index) => {
@@ -67,9 +75,15 @@ export function generateWhatsAppOrderUrl(order: WhatsAppOrderData): string {
 
   message += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
   message += `*Subtotal:* ${formatCurrency(subtotal)}\n`;
-  message += `*Domicilio:* ${domicilioText}\n`;
-  message += `*TOTAL A PAGAR:* *${formatCurrency(order.total)}*\n`;
+  message += `*Domicilio/Envío:* ${domicilioText}\n`;
+  message += `*TOTAL PRODUCTOS:* *${formatCurrency(order.total)}*\n`;
   message += `*Método de Pago:* ${paymentLabel}\n`;
+
+  if (!isNeiva) {
+    message += `\n*📌 CONDICIÓN DE DESPACHO NACIONAL:* Al ser un envío fuera de Neiva, se requiere *PAGO COMPLETO ANTICIPADO (100%)* de los productos antes de ser enviados. El flete se paga a la transportadora.\n`;
+  } else {
+    message += `\n*🛵 CONDICIÓN DE ENTREGA LOCAL:* Despacho directo en Neiva (Pago contraentrega o transferencia al recibir).\n`;
+  }
 
   if (order.requiereAsesoria) {
     message += `\n*✨ ATENCIÓN:* La cliente seleccionó que *REQUIERE ASESORÍA PERSONALIZADA* sobre tonos/aplicación antes del despacho.\n`;
@@ -79,7 +93,7 @@ export function generateWhatsAppOrderUrl(order: WhatsAppOrderData): string {
     message += `\n*📝 Notas del cliente:* ${order.notas.trim()}\n`;
   }
 
-  message += `\nMuchas gracias por elegir la belleza consciente de Dulce Cosmetics. ¡Quedo atento a la confirmación de despacho! ✨`;
+  message += `\nMuchas gracias por elegir la belleza de Dulce Cosmetics. ¡Quedo atento a la confirmación de despacho! ✨`;
 
   const encodedMessage = encodeURIComponent(message);
   return `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;

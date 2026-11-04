@@ -17,6 +17,9 @@ import {
   AlertCircle,
   History,
   Info,
+  Banknote,
+  Smartphone,
+  CreditCard,
 } from "lucide-react";
 
 interface LocationHistoryItem {
@@ -91,19 +94,26 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  // LÓGICA DE DOMICILIOS DINÁMICOS (Puntos 2, 12, 17)
+  // Para envíos fuera de Neiva se exige pago 100% anticipado (no aplica contraentrega)
+  useEffect(() => {
+    if (ciudad.trim().toLowerCase() !== "neiva" && metodoPago === "efectivo") {
+      setMetodoPago("nequi");
+    }
+  }, [ciudad, metodoPago]);
+
+  // LÓGICA DE DOMICILIOS DINÁMICOS
   const shippingCalculation = useMemo(() => {
     const isNeiva = ciudad.trim().toLowerCase() === "neiva";
     const normalizedBarrio = barrio.trim().toLowerCase();
 
-    // Caso 1: Fuera de Neiva
+    // Caso 1: Fuera de Neiva (Pago 100% Anticipado)
     if (!isNeiva) {
       return {
         costo: 0,
         esGratis: false,
         esNacional: true,
-        mensaje: "Flete Nacional Contraentrega",
-        detalle: "Envío por transportadora (Interrapidísimo/Envía) con flete contraentrega.",
+        mensaje: "Envío Nacional / Regional (Pago 100% Anticipado)",
+        detalle: "Requiere pago completo de productos previo al despacho. El flete de transportadora se cancela al recibir.",
       };
     }
 
@@ -211,6 +221,7 @@ export default function CheckoutPage() {
       const orderPayload = {
         nombreCliente: nombreCliente.trim(),
         telefono: telefono.trim(),
+        ciudad: ciudad.trim(),
         direccion: direccion.trim(),
         barrio: barrio.trim(),
         metodoPago,
@@ -618,25 +629,38 @@ export default function CheckoutPage() {
 
           {/* Sección 2: Método de Pago y Asesoría */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#d4c2c2]/40 shadow-sm space-y-6">
-            <h2 className="font-serif text-xl font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#7b5455]" />
-              <span>2. Método de Pago</span>
-            </h2>
+            <div className="border-b border-gray-100 pb-3 flex items-center justify-between">
+              <h2 className="font-serif text-xl font-bold text-gray-900 flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-[#7b5455]" />
+                <span>2. Método de Pago</span>
+              </h2>
+              <span className="text-[11px] font-medium text-gray-500">
+                {ciudad.trim().toLowerCase() === "neiva"
+                  ? "Pago local contraentrega disponible"
+                  : "Destino nacional: Pago 100% anticipado"}
+              </span>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Opción Efectivo */}
               <label
-                className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-                  metodoPago === "efectivo"
-                    ? "border-[#7b5455] bg-[#f4c2c2]/10 ring-2 ring-[#7b5455]/20"
-                    : "border-gray-200 hover:border-gray-300"
+                className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
+                  ciudad.trim().toLowerCase() !== "neiva"
+                    ? "opacity-45 bg-gray-50 border-gray-200 cursor-not-allowed"
+                    : metodoPago === "efectivo"
+                    ? "border-[#7b5455] bg-[#f4c2c2]/10 ring-2 ring-[#7b5455]/20 cursor-pointer"
+                    : "border-gray-200 hover:border-gray-300 cursor-pointer"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-2xl">💵</span>
+                  <div className="w-8 h-8 rounded-lg bg-[#f4c2c2]/30 flex items-center justify-center text-[#7b5455]">
+                    <Banknote className="w-4 h-4" />
+                  </div>
                   <input
                     type="radio"
                     name="metodoPago"
-                    checked={metodoPago === "efectivo"}
+                    disabled={ciudad.trim().toLowerCase() !== "neiva"}
+                    checked={metodoPago === "efectivo" && ciudad.trim().toLowerCase() === "neiva"}
                     onChange={() => setMetodoPago("efectivo")}
                     className="accent-[#7b5455]"
                   />
@@ -644,26 +668,31 @@ export default function CheckoutPage() {
                 <div>
                   <h4 className="font-bold text-sm text-gray-900">Efectivo</h4>
                   <p className="text-[11px] text-gray-500 mt-0.5">
-                    Contraentrega en tu puerta
+                    {ciudad.trim().toLowerCase() === "neiva"
+                      ? "Contraentrega en tu puerta"
+                      : "Solo disponible en Neiva"}
                   </p>
                 </div>
               </label>
 
+              {/* Opción Nequi */}
               <label
                 className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
                   metodoPago === "nequi"
-                    ? "border-[#7b5455] bg-[#f4c2c2]/10 ring-2 ring-[#7b5455]/20"
+                    ? "border-[#b17ef8] bg-[#b17ef8]/10 ring-2 ring-[#b17ef8]/30"
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-2xl">🟣</span>
+                  <div className="w-8 h-8 rounded-lg bg-[#b17ef8]/20 flex items-center justify-center text-[#7b1bf0]">
+                    <Smartphone className="w-4 h-4" />
+                  </div>
                   <input
                     type="radio"
                     name="metodoPago"
                     checked={metodoPago === "nequi"}
                     onChange={() => setMetodoPago("nequi")}
-                    className="accent-[#7b5455]"
+                    className="accent-[#7b1bf0]"
                   />
                 </div>
                 <div>
@@ -674,21 +703,24 @@ export default function CheckoutPage() {
                 </div>
               </label>
 
+              {/* Opción Daviplata */}
               <label
                 className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
                   metodoPago === "daviplata"
-                    ? "border-[#7b5455] bg-[#f4c2c2]/10 ring-2 ring-[#7b5455]/20"
+                    ? "border-[#e63946] bg-[#e63946]/10 ring-2 ring-[#e63946]/30"
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-2xl">🔴</span>
+                  <div className="w-8 h-8 rounded-lg bg-[#e63946]/20 flex items-center justify-center text-[#e63946]">
+                    <CreditCard className="w-4 h-4" />
+                  </div>
                   <input
                     type="radio"
                     name="metodoPago"
                     checked={metodoPago === "daviplata"}
                     onChange={() => setMetodoPago("daviplata")}
-                    className="accent-[#7b5455]"
+                    className="accent-[#e63946]"
                   />
                 </div>
                 <div>
@@ -699,6 +731,19 @@ export default function CheckoutPage() {
                 </div>
               </label>
             </div>
+
+            {/* Aviso informativo si el destino es fuera de Neiva */}
+            {ciudad.trim().toLowerCase() !== "neiva" && (
+              <div className="p-3.5 bg-amber-50 border border-amber-200/80 rounded-xl text-amber-900 text-xs flex items-start gap-2.5 animate-fade-in">
+                <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold block mb-0.5">Política de Pago Fuera de Neiva:</span>
+                  <p className="leading-relaxed text-[11px]">
+                    Para despachos a otros municipios o nivel nacional se requiere el <strong>pago completo (100% anticipado)</strong> de los cosméticos antes del envío vía Nequi o Daviplata. El valor del flete de transporte se cancela contraentrega a la empresa de mensajería (Interrapidísimo / Envía).
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Checkbox: Requiere Asesoría de Belleza */}
             <div className="p-4 bg-[#FAF9F6] rounded-xl border border-[#d4c2c2]/40 flex items-start gap-3">
