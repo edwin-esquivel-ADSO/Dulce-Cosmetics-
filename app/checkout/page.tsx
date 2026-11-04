@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import { useCart } from "@/hooks/useCart";
 import { createOrderAction } from "@/backend/actions/orderActions";
 import Link from "next/link";
@@ -411,9 +412,12 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-10 flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-        <img
+        <Image
           src="/logo.png"
           alt="Dulce Cosmetics"
+          width={64}
+          height={64}
+          priority
           className="w-16 h-16 rounded-full object-cover shadow-md ring-2 ring-[#f4c2c2]/70 shrink-0"
         />
         <div>

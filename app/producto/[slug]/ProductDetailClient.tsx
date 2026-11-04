@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useCart } from "@/hooks/useCart";
 import { generateProductInquiryUrl } from "@/backend/whatsapp";
 import {
@@ -81,10 +82,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       <div className="lg:col-span-6 space-y-4">
         {/* Imagen Principal */}
         <div className="aspect-square bg-white rounded-3xl overflow-hidden border border-[#d4c2c2]/40 shadow-sm relative group">
-          <img
+          <Image
             src={product.imagenUrl}
             alt={product.nombre}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
 
           <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">

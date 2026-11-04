@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MessageCircle, MapPin, Heart, Sparkles, Phone, Clock, Truck } from "lucide-react";
 
@@ -20,17 +21,19 @@ export default function Footer() {
           {/* Columna 1: Marca y Filosofía */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <img
+              <Image
                 src="/logo.png"
                 alt="Dulce Cosmetics"
-                className="w-12 h-12 rounded-full object-cover ring-2 ring-[#ecbaba]/60"
+                width={48}
+                height={48}
+                className="w-12 h-12 rounded-full object-cover ring-2 ring-[#ecbaba]/60 shrink-0"
               />
               <div>
                 <span className="font-serif text-2xl font-bold tracking-tight text-[#ecbaba] block">
                   Dulce Cosmetics
                 </span>
                 <p className="text-[10px] tracking-[0.2em] uppercase text-[#f1ca50]">
-                  Editorial Luxe • Neiva
+                  Natalia Narváez • Propietaria
                 </p>
               </div>
             </div>
@@ -145,7 +148,7 @@ export default function Footer() {
 
         {/* Barra Inferior de Copyright */}
         <div className="border-t border-[#827473]/20 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#dadada]/70 gap-4">
-          <p>© {new Date().getFullYear()} Dulce Cosmetics. Todos los derechos reservados. Neiva, Huila.</p>
+          <p>© {new Date().getFullYear()} Dulce Cosmetics • Propietaria: Natalia Narváez • Desarrollado por Edwin Esquivel (ADSO SENA).</p>
           <div className="flex items-center gap-1 text-xs">
             <span>Hecho con</span>
             <Heart className="w-3.5 h-3.5 text-[#ecbaba] fill-[#ecbaba]" />
